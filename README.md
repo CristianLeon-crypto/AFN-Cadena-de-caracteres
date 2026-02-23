@@ -47,22 +47,29 @@ No necesitas instalar nada, solo tener Python 3.
 
 ```bash
 python3 quiz.py archivo.txt
+```
 
-C
+### C
 
 Primero hay que compilar (solo una vez):
 
+```bash
 gcc quiz.c -o QuizC
-
+```
 
 Luego ejecutar:
 
+```bash
 ./QuizC archivo.txt
+```
 
-¿Cómo debe ser el archivo.txt?
+---
+
+## ¿Cómo debe ser el archivo.txt?
 
 Un token por línea, así de simple:
 
+```
 abc
 A
 +
@@ -70,8 +77,13 @@ A
 123
 1abc
 @hello
+```
 
-Ejemplo de salida
+---
+
+## Ejemplo de salida
+
+```
 ACEPTA: 'abc' -> Id
 ACEPTA: 'A' -> Id
 ACEPTA: '+' -> Suma
@@ -79,15 +91,22 @@ ACEPTA: '++' -> Incremento
 ACEPTA: '123' -> Entero
 NO ACEPTA: '1abc'
 NO ACEPTA: '@hello'
+```
 
-Estructura del proyecto
+---
+
+## Estructura del proyecto
+
+```
 📁 proyecto/
 ├── quiz.py      # versión Python
 ├── quiz.c       # versión C
 └── archivo.txt  # archivo de entrada
+```
 
+---
 
-Hecho con Python 3 y C para la materia de Lenguajes de Programación 🚀
-
+> Hecho con Python 3 y C para la materia de Lenguajes de Programación 🚀
+```
 
 > Cada bloque de código necesita abrirse con ` ``` ` y cerrarse con ` ``` `. En tu versión original varios bloques no tenían el cierre, por eso todo lo que seguía se metía dentro del bloque de código.
