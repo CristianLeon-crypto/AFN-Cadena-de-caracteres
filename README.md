@@ -1,3 +1,6 @@
+El problema es que **te faltan los cierres de los bloques de código** (las triples comillas). Aquí el README corregido:
+
+```markdown
 # AFD - Autómata Finito Determinista
 
 ## ¿Qué hace esto?
@@ -24,14 +27,16 @@ El AFD va leyendo cada carácter del token uno por uno y cambia de estado según
 - **-1** → estado muerto, ya no hay vuelta atrás
 
 Por ejemplo para un **Id**:
+```
 A b c 1 2
 q0 → q1 → q1 → q1 → q1 ✅ ACEPTA
-
+```
 
 Para algo inválido:
+```
 1 a b c
 q0 → q1(entero) pero luego encuentra 'a' → muerto ❌ NO ACEPTA
-
+```
 
 ---
 
@@ -43,20 +48,29 @@ No necesitas instalar nada, solo tener Python 3.
 
 ```bash
 python3 quiz.py archivo.txt
-
+```
 
 ### C
+
 Primero hay que compilar (solo una vez):
 
+```bash
 gcc quiz.c -o QuizC
+```
 
 Luego ejecutar:
 
+```bash
 ./QuizC archivo.txt
+```
 
-¿Cómo debe ser el archivo.txt?
+---
+
+## ¿Cómo debe ser el archivo.txt?
+
 Un token por línea, así de simple:
 
+```
 abc
 A
 +
@@ -64,8 +78,13 @@ A
 123
 1abc
 @hello
+```
 
-Ejemplo de salida
+---
+
+## Ejemplo de salida
+
+```
 ACEPTA: 'abc' -> Id
 ACEPTA: 'A' -> Id
 ACEPTA: '+' -> Suma
@@ -73,9 +92,22 @@ ACEPTA: '++' -> Incremento
 ACEPTA: '123' -> Entero
 NO ACEPTA: '1abc'
 NO ACEPTA: '@hello'
+```
 
-Estructura del proyecto
+---
+
+## Estructura del proyecto
+
+```
 📁 proyecto/
-├── afd.py       # versión Python
-├── afd.c        # versión C
+├── quiz.py      # versión Python
+├── quiz.c       # versión C
 └── archivo.txt  # archivo de entrada
+```
+
+---
+
+> Hecho con Python 3 y C para la materia de Lenguajes de Programación 🚀
+```
+
+> Cada bloque de código necesita abrirse con ` ``` ` y cerrarse con ` ``` `. En tu versión original varios bloques no tenían el cierre, por eso todo lo que seguía se metía dentro del bloque de código.
