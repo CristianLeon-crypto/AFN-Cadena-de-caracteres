@@ -5,3 +5,12 @@ Ab1c2
 7
 a0
 abc
+abc
+A
+abc123
++
+++
+123
+9
+1abc
+@hello

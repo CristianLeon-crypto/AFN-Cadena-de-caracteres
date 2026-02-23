@@ -1,108 +1,86 @@
-// dfa_tokens.c
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 
-static void rstrip_newline(char *s) {
-    size_t n = strlen(s);
-    while (n > 0 && (s[n-1] == '\n' || s[n-1] == '\r')) {
-        s[n-1] = '\0';
-        n--;
-    }
-}
+#define MAX_TOKEN 256
 
-static void trim_spaces(char *s) {
-    // trim izquierda
-    char *start = s;
-    while (*start && isspace((unsigned char)*start)) start++;
+int afd(char *token) {
+    int len = strlen(token);
+    int estado = 0;
+    int i;
 
-    // mover al inicio
-    if (start != s) memmove(s, start, strlen(start) + 1);
-
-    // trim derecha
-    size_t n = strlen(s);
-    while (n > 0 && isspace((unsigned char)s[n-1])) {
-        s[n-1] = '\0';
-        n--;
-    }
-}
-
-static int is_plus(const char *s) {
-    return strcmp(s, "+") == 0;
-}
-
-static int is_increment(const char *s) {
-    return strcmp(s, "++") == 0;
-}
-
-static int is_integer_1digit(const char *s) {
-    return (strlen(s) == 1 && isdigit((unsigned char)s[0]));
-}
-
-static int is_id(const char *s) {
-    // [A-Za-z]([a-z][0-9])*
-    size_t len = strlen(s);
     if (len == 0) return 0;
 
-    size_t i = 0;
+    // --- Incremento: ++ ---
+    if (strcmp(token, "++") == 0) return 4;
 
-    if (!isalpha((unsigned char)s[i])) return 0;
-    i++;
+    // --- Suma: + ---
+    if (strcmp(token, "+") == 0) return 2;
 
-    while (i < len) {
-        if (!(s[i] >= 'a' && s[i] <= 'z')) return 0;
-        i++;
-        if (i >= len) return 0;
-        if (!isdigit((unsigned char)s[i])) return 0;
-        i++;
+    // --- AFD Entero: [0-9]+ ---
+    estado = 0;
+    for (i = 0; i < len; i++) {
+        if (estado == 0) {
+            if (isdigit(token[i])) estado = 1;
+            else { estado = -1; break; }
+        } else if (estado == 1) {
+            if (isdigit(token[i])) estado = 1;
+            else { estado = -1; break; }
+        }
     }
+    if (estado == 1) return 3;
 
-    return 1;
+    // --- AFD Id: [A-Za-z]([a-z]|[0-9])* ---
+    estado = 0;
+    for (i = 0; i < len; i++) {
+        if (estado == 0) {
+            if (isalpha(token[i])) estado = 1;
+            else { estado = -1; break; }
+        } else if (estado == 1) {
+            if (islower(token[i]) || isdigit(token[i])) estado = 1;
+            else { estado = -1; break; }
+        }
+    }
+    if (estado == 1) return 1;
+
+    return 0;
 }
 
-static int accepts_token(const char *s) {
-    // Orden: "++" primero
-    if (is_increment(s)) return 1;
-    else if (is_plus(s)) return 1;
-    else if (is_integer_1digit(s)) return 1;
-    else if (is_id(s)) return 1;
-    else return 0;
-}
+int main(int argc, char *argv[]) {
+    FILE *archivo;
+    char linea[MAX_TOKEN];
+    int numLinea = 1;
+    int resultado;
+    char *nombres[] = {"NO ACEPTA", "Id", "Suma", "Entero", "Incremento"};
 
-int main(void) {
-    FILE *f = fopen("archivo.txt", "r");
-    if (!f) {
-        perror("Error abriendo archivo.txt");
+    if (argc < 2) {
+        printf("Uso: ./afd <archivo.txt>\n");
         return 1;
     }
 
-    char line[1024];
+    archivo = fopen(argv[1], "r");
 
-    while (fgets(line, sizeof(line), f)) {
-        char raw[1024];
-        strncpy(raw, line, sizeof(raw));
-        raw[sizeof(raw)-1] = '\0';
-
-        rstrip_newline(line);
-        // guardamos una versión original sin \n para imprimirla
-        char original[1024];
-        strncpy(original, line, sizeof(original));
-        original[sizeof(original)-1] = '\0';
-
-        trim_spaces(line);
-
-        if (line[0] == '\0') {
-            printf("\"%s\" NO ACEPTA\n", original);
-            continue;
-        }
-
-        if (accepts_token(line)) {
-            printf("\"%s\" ACEPTA\n", original);
-        } else {
-            printf("\"%s\" NO ACEPTA\n", original);
-        }
+    if (archivo == NULL) {
+        printf("ERROR: No se pudo abrir '%s'\n", argv[1]);
+        return 1;
     }
 
-    fclose(f);
-    return 0;
+    while (fgets(linea, MAX_TOKEN, archivo) != NULL) {
+        int len = strlen(linea);
+        if (len > 0 && linea[len - 1] == '\n')
+            linea[len - 1] = '\0';
+
+        resultado = afd(linea);
+
+        if (resultado == 0) {
+            printf("NO ACEPTA: '%s'\n", linea);
+        } else {
+            printf("ACEPTA: '%s' -> %s\n", linea, nombres[resultado]);
+        }
+
+        numLinea++;
+    }
+
+fclose(archivo);
+return 0;
 }
