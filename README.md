@@ -105,8 +105,3 @@ NO ACEPTA: '@hello'
 ```
 
 ---
-
-> Hecho con Python 3 y C para la materia de Lenguajes de Programación 🚀
-```
-
-> Cada bloque de código necesita abrirse con ` ``` ` y cerrarse con ` ``` `. En tu versión original varios bloques no tenían el cierre, por eso todo lo que seguía se metía dentro del bloque de código.
